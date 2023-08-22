@@ -147,7 +147,10 @@ func GenerateCommand(command DeviceCommand, params ...string) string {
 	}
 
 	// Combine the command and filled parameters
-	fullCommand := string(command) + "," + strings.Join(filledParams, ",")
+	fullCommand := string(command)
+	if len(filledParams) > 0 {
+		fullCommand += "," + strings.Join(filledParams, ",")
+	}
 
 	return fullCommand
 }
