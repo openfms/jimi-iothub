@@ -34,38 +34,38 @@ const (
 	GeneralCommandType   RequestCommandType = "general"
 )
 
-type ResponseCode int
+type ResponseCode string
 
 const (
 	// Success The command sent successfully and received a return code indicating the device status, such as busy or error.
-	Success ResponseCode = 100
+	Success ResponseCode = "100"
 
 	// InvalidParameter Invalid parameter.
-	InvalidParameter ResponseCode = 200
+	InvalidParameter ResponseCode = "200"
 
 	// DeviceOffline Device offline.
-	DeviceOffline ResponseCode = 300
+	DeviceOffline ResponseCode = "300"
 
 	// DeviceNotRegistered Device not registered with route table (No mapping between IMEI and gateway ID is found in Redis).
-	DeviceNotRegistered ResponseCode = 301
+	DeviceNotRegistered ResponseCode = "301"
 
 	// DeviceBusy The last command has been sent and no response indicating "device busy" is received.
-	DeviceBusy ResponseCode = 302
+	DeviceBusy ResponseCode = "302"
 
 	// SMSSentSuccessfully SMS sent successfully.
-	SMSSentSuccessfully ResponseCode = 303
+	SMSSentSuccessfully ResponseCode = "303"
 
 	// SMSFailed SMS failed.
-	SMSFailed ResponseCode = 304
+	SMSFailed ResponseCode = "304"
 
 	// NetworkError Network error (Interrupted, etc.).
-	NetworkError ResponseCode = 400
+	NetworkError ResponseCode = "400"
 
 	// CodeExecutionException Code execution exception.
-	CodeExecutionException ResponseCode = 500
+	CodeExecutionException ResponseCode = "500"
 
 	// RequestTimeout Request timeout.
-	RequestTimeout ResponseCode = 600
+	RequestTimeout ResponseCode = "600"
 )
 
 type Response struct {

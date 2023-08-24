@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"github.com/google/go-querystring/query"
 	"sync"
 )
 
@@ -27,18 +28,18 @@ func getRequestID() int64 {
 }
 
 type DeviceInstructionRequest struct {
-	DeviceIMEI   string             `json:"deviceImei"`
-	CmdContent   string             `json:"cmdContent"`
-	ServerFlagID int64              `json:"serverFlagId"`
-	ProNo        ProNumber          `json:"proNo"`
-	Platform     RequestPlatform    `json:"platform"`
-	RequestID    int64              `json:"requestId"`
-	CmdType      RequestCommandType `json:"cmdType"`
-	Language     string             `json:"language"`
-	Sync         bool               `json:"sync"`
-	OfflineFlag  bool               `json:"offlineFlag"`
-	Timeout      int                `json:"timeOut"`
-	Token        string             `json:"token"`
+	DeviceIMEI   string             `url:"deviceImei"`
+	CmdContent   string             `url:"cmdContent"`
+	ServerFlagID int64              `url:"serverFlagId"`
+	ProNo        ProNumber          `url:"proNo"`
+	Platform     RequestPlatform    `url:"platform"`
+	RequestID    int64              `url:"requestId"`
+	CmdType      RequestCommandType `url:"cmdType"`
+	Language     string             `url:"language"`
+	Sync         bool               `url:"sync"`
+	OfflineFlag  bool               `url:"offlineFlag"`
+	Timeout      int                `url:"timeOut"`
+	Token        string             `url:"token"`
 }
 
 func NewDeviceInstructionRequest(imei, command string) *DeviceInstructionRequest {
@@ -57,14 +58,13 @@ func NewDeviceInstructionRequest(imei, command string) *DeviceInstructionRequest
 	}
 }
 func (cli *IotHubClient) SendDeviceInstruction(request *DeviceInstructionRequest) (*Response, error) {
-	// Convert the CommandRequest to JSON
-	jsonData, err := json.Marshal(request)
+	values, err := query.Values(request)
 	if err != nil {
 		return nil, err
 	}
 	// Send the POST request with x-www-form-urlencoded data
 	resp, err := cli.client.R().
-		SetBody(string(jsonData)).
+		SetBody(values.Encode()).
 		Post(cli.endPointURL.String() + "/api/device/sendInstruct")
 
 	if err != nil {

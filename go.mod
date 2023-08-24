@@ -4,6 +4,7 @@ go 1.21.0
 
 require (
 	github.com/go-resty/resty/v2 v2.7.0
+	github.com/google/go-querystring v1.1.0
 	gotest.tools/v3 v3.5.0
 )
 
