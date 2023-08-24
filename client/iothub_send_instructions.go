@@ -42,14 +42,14 @@ type DeviceInstructionRequest struct {
 	Token        string             `url:"token"`
 }
 
-func NewDeviceInstructionRequest(imei, command string) *DeviceInstructionRequest {
+func (cli *IotHubClient) NewDeviceInstructionRequest(imei, command string) *DeviceInstructionRequest {
 	return &DeviceInstructionRequest{
 		DeviceIMEI:   imei,
 		CmdContent:   command,
 		ProNo:        ProNoOnlineCommand,
 		Platform:     RequestPlatformWeb,
 		CmdType:      NormallnsCommandType,
-		Token:        "123456",
+		Token:        cli.apiToken,
 		OfflineFlag:  true,
 		Timeout:      30,
 		Sync:         true,

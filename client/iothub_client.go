@@ -9,6 +9,7 @@ import (
 
 type IotHubClient struct {
 	client      *resty.Client
+	apiToken    string
 	endPointURL *url.URL
 	wg          *sync.WaitGroup
 }
@@ -19,7 +20,7 @@ type JimiIotHub interface {
 	SendDeviceInstruction(request *DeviceInstructionRequest) (*Response, error)
 }
 
-func NewIotHubClient(endPoint, proxy string) (*IotHubClient, error) {
+func NewIotHubClient(endPoint, proxy, token string) (*IotHubClient, error) {
 	endPointURL, err := utils.GetEndpointURL(endPoint)
 	if err != nil {
 		return nil, err
@@ -36,6 +37,7 @@ func NewIotHubClient(endPoint, proxy string) (*IotHubClient, error) {
 		client:      client,
 		wg:          &sync.WaitGroup{},
 		endPointURL: endPointURL,
+		apiToken:    token,
 	}, nil
 }
 
