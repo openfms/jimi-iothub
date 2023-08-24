@@ -28,33 +28,25 @@ func getRequestID() int64 {
 }
 
 type DeviceInstructionRequest struct {
-	DeviceIMEI   string             `url:"deviceImei"`
-	CmdContent   string             `url:"cmdContent"`
-	ServerFlagID int64              `url:"serverFlagId"`
-	ProNo        ProNumber          `url:"proNo"`
-	Platform     RequestPlatform    `url:"platform"`
-	RequestID    int64              `url:"requestId"`
-	CmdType      RequestCommandType `url:"cmdType"`
-	Language     string             `url:"language"`
-	Sync         bool               `url:"sync"`
-	OfflineFlag  bool               `url:"offlineFlag"`
-	Timeout      int                `url:"timeOut"`
-	Token        string             `url:"token"`
+	BaseInstructRequest
+	CmdContent string `url:"cmdContent,required"`
 }
 
 func (cli *IotHubClient) NewDeviceInstructionRequest(imei, command string) *DeviceInstructionRequest {
 	return &DeviceInstructionRequest{
-		DeviceIMEI:   imei,
-		CmdContent:   command,
-		ProNo:        ProNoOnlineCommand,
-		Platform:     RequestPlatformWeb,
-		CmdType:      NormallnsCommandType,
-		Token:        cli.apiToken,
-		OfflineFlag:  true,
-		Timeout:      30,
-		Sync:         true,
-		RequestID:    getRequestID(),
-		ServerFlagID: getServerFlagID(),
+		BaseInstructRequest: BaseInstructRequest{
+			DeviceIMEI:   imei,
+			ProNo:        ProNoOnlineCommand,
+			Platform:     RequestPlatformWeb,
+			CmdType:      NormallnsCommandType,
+			Token:        cli.apiToken,
+			OfflineFlag:  true,
+			Timeout:      30,
+			Sync:         true,
+			RequestID:    getRequestID(),
+			ServerFlagID: getServerFlagID(),
+		},
+		CmdContent: command,
 	}
 }
 func (cli *IotHubClient) SendDeviceInstruction(request *DeviceInstructionRequest) (*Response, error) {

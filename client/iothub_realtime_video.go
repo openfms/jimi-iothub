@@ -15,18 +15,8 @@ type RealTimeCmdContent struct {
 }
 
 type RealTimeAudioVideoRequest struct {
-	DeviceIMEI   string              `url:"deviceImei"`
-	CmdContent   *RealTimeCmdContent `url:"cmdContent"`
-	ServerFlagID int64               `url:"serverFlagId"`
-	ProNo        ProNumber           `url:"proNo"`
-	Platform     RequestPlatform     `url:"platform"`
-	RequestID    int64               `url:"requestId"`
-	CmdType      RequestCommandType  `url:"cmdType"`
-	Language     string              `url:"language"`
-	Sync         bool                `url:"sync"`
-	OfflineFlag  bool                `url:"offlineFlag"`
-	Timeout      int                 `url:"timeOut"`
-	Token        string              `url:"token"`
+	BaseInstructRequest
+	CmdContent *RealTimeCmdContent `url:"cmdContent,required"`
 }
 
 func (cli *IotHubClient) NewRealTimeAudioVideoRequest(imei string, cmdContent *RealTimeCmdContent) *RealTimeAudioVideoRequest {
@@ -40,17 +30,19 @@ func (cli *IotHubClient) NewRealTimeAudioVideoRequest(imei string, cmdContent *R
 		}
 	}
 	return &RealTimeAudioVideoRequest{
-		DeviceIMEI:   imei,
-		CmdContent:   cmdContent,
-		ProNo:        ProNoRealTimeAudioVideoRequest,
-		Platform:     RequestPlatformWeb,
-		CmdType:      NormallnsCommandType,
-		Token:        cli.apiToken,
-		OfflineFlag:  true,
-		Timeout:      30,
-		Sync:         true,
-		RequestID:    getRequestID(),
-		ServerFlagID: getServerFlagID(),
+		CmdContent: cmdContent,
+		BaseInstructRequest: BaseInstructRequest{
+			DeviceIMEI:   imei,
+			ProNo:        ProNoRealTimeAudioVideoRequest,
+			Platform:     RequestPlatformWeb,
+			CmdType:      NormallnsCommandType,
+			Token:        cli.apiToken,
+			OfflineFlag:  true,
+			Timeout:      30,
+			Sync:         true,
+			RequestID:    getRequestID(),
+			ServerFlagID: getServerFlagID(),
+		},
 	}
 }
 func (cli *IotHubClient) RealTimeAudioVideoTransmission(request *RealTimeAudioVideoRequest) (*Response, error) {
