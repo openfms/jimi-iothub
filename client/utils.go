@@ -1,5 +1,11 @@
 package client
 
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
 type ProNumber int
 
 const (
@@ -86,4 +92,19 @@ type ResponseData struct {
 	ServerFlagId    string       `json:"_serverFlagId"`
 	GateId          string       `json:"_gateId"`
 	RouteServerTime string       `json:"_route_server_time"`
+}
+
+func GenerateUniqueInstructionID() int {
+	// Generate a random number between 0 and 999999999
+	rand.Seed(time.Now().UnixNano())
+	randomNumber := rand.Intn(1000000000)
+
+	// Ensure the random number is exactly 9 digits by adding leading zeros
+	paddedNumber := fmt.Sprintf("%09d", randomNumber)
+
+	// Convert the padded number to an integer
+	uniqueID := 0
+	fmt.Sscanf(paddedNumber, "%d", &uniqueID)
+
+	return uniqueID
 }

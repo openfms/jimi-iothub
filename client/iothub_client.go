@@ -21,6 +21,7 @@ type JimiIotHub interface {
 	RealTimeAVRequest(imei string, cmdContent *RealTimeCmdContent) *InstructRequest
 	DeviceInstructionRequest(imei, command string) *InstructRequest
 	RealTimeAVControlRequest(imei string, cmdContent *RealTimeControlCmdContent) *InstructRequest
+	ListAVResourcesRequest(imei string, cmdContent *AVResourceListCmdContent) *InstructRequest
 }
 
 func NewIotHubClient(endPoint, proxy, token string) (*IotHubClient, error) {
