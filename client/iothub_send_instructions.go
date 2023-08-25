@@ -42,7 +42,7 @@ type InstructRequest struct {
 	Token        string             `url:"token"`
 }
 
-func (cli *IotHubClient) NewDeviceInstructionRequest(imei, command string) *InstructRequest {
+func (cli *IotHubClient) DeviceInstructionRequest(imei, command string) *InstructRequest {
 	return &InstructRequest{
 		DeviceIMEI:   imei,
 		ProNo:        ProNoOnlineCommand,

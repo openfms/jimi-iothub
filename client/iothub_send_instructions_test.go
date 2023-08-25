@@ -12,7 +12,7 @@ func TestIotHubClient_SendDeviceInstruction(t *testing.T) {
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
 	iothubcli, err := NewIotHubClient(endPoint, "", "123456")
 	assert.NilError(t, err)
-	req := iothubcli.NewDeviceInstructionRequest(deviceImei, commands.GenerateCommand(commands.STATUS))
+	req := iothubcli.DeviceInstructionRequest(deviceImei, commands.GenerateCommand(commands.STATUS))
 	resp, err := iothubcli.SendDeviceInstruction(req)
 	assert.NilError(t, err)
 	assert.Assert(t, resp.Code == 0)

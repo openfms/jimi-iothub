@@ -87,21 +87,3 @@ type ResponseData struct {
 	GateId          string       `json:"_gateId"`
 	RouteServerTime string       `json:"_route_server_time"`
 }
-
-type RealTimeAudioVideoDataType string
-
-const (
-	AudioVideoDataType              RealTimeAudioVideoDataType = "0"
-	VideoDataType                   RealTimeAudioVideoDataType = "1"
-	TwoWayIntercomDataType          RealTimeAudioVideoDataType = "2"
-	MonitorDataType                 RealTimeAudioVideoDataType = "3"
-	CenterBroadcastDataType         RealTimeAudioVideoDataType = "4"
-	TransparentTransmissionDataType RealTimeAudioVideoDataType = "5"
-)
-
-type RealTimeCodeStreamType string
-
-const (
-	MainStream RealTimeCodeStreamType = "0"
-	SubStream  RealTimeCodeStreamType = "1"
-)
