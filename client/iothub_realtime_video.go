@@ -2,24 +2,18 @@ package client
 
 import (
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 )
 
 type RealTimeCmdContent struct {
-	DataType       RealTimeAudioVideoDataType `url:"dataType"`
-	CodeStreamType RealTimeCodeStreamType     `url:"codeStreamType"`
-	Channel        string                     `url:"channel"`
-	VideoIP        string                     `url:"videoIP"`
-	VideoTCPPort   string                     `url:"videoTCPPort"`
-	VideoUDPPort   string                     `url:"videoUDPPort"`
+	DataType       RealTimeAudioVideoDataType `json:"dataType"`
+	CodeStreamType RealTimeCodeStreamType     `json:"codeStreamType"`
+	Channel        string                     `json:"channel"`
+	VideoIP        string                     `json:"videoIP"`
+	VideoTCPPort   string                     `json:"videoTCPPort"`
+	VideoUDPPort   string                     `json:"videoUDPPort"`
 }
 
-type RealTimeAudioVideoRequest struct {
-	BaseInstructRequest
-	CmdContent *RealTimeCmdContent `url:"cmdContent,required"`
-}
-
-func (cli *IotHubClient) NewRealTimeAudioVideoRequest(imei string, cmdContent *RealTimeCmdContent) *RealTimeAudioVideoRequest {
+func (cli *IotHubClient) NewRealTimeAudioVideoRequest(imei string, cmdContent *RealTimeCmdContent) *InstructRequest {
 	if cmdContent == nil {
 		cmdContent = &RealTimeCmdContent{
 			DataType:       AudioVideoDataType,
@@ -29,39 +23,8 @@ func (cli *IotHubClient) NewRealTimeAudioVideoRequest(imei string, cmdContent *R
 			VideoUDPPort:   "0",
 		}
 	}
-	return &RealTimeAudioVideoRequest{
-		CmdContent: cmdContent,
-		BaseInstructRequest: BaseInstructRequest{
-			DeviceIMEI:   imei,
-			ProNo:        ProNoRealTimeAudioVideoRequest,
-			Platform:     RequestPlatformWeb,
-			CmdType:      NormallnsCommandType,
-			Token:        cli.apiToken,
-			OfflineFlag:  true,
-			Timeout:      30,
-			Sync:         true,
-			RequestID:    getRequestID(),
-			ServerFlagID: getServerFlagID(),
-		},
-	}
-}
-func (cli *IotHubClient) RealTimeAudioVideoTransmission(request *RealTimeAudioVideoRequest) (*Response, error) {
-	values, err := query.Values(request)
-	if err != nil {
-		return nil, err
-	}
-	// Send the POST request with x-www-form-urlencoded data
-	resp, err := cli.client.R().
-		SetBody(values.Encode()).
-		Post(cli.endPointURL.String() + "/api/device/sendInstruct")
-
-	if err != nil {
-		return nil, err
-	}
-	apiResponse := &Response{}
-	err = json.Unmarshal(resp.Body(), apiResponse)
-	if err != nil {
-		return nil, err
-	}
-	return apiResponse, nil
+	jsonData, _ := json.Marshal(cmdContent)
+	req := cli.NewDeviceInstructionRequest(imei, string(jsonData))
+	req.ProNo = ProNoRealTimeAudioVideoRequest
+	return req
 }

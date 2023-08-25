@@ -27,29 +27,38 @@ func getRequestID() int64 {
 	return requestID
 }
 
-type DeviceInstructionRequest struct {
-	BaseInstructRequest
-	CmdContent string `url:"cmdContent,required"`
+type InstructRequest struct {
+	DeviceIMEI   string             `url:"deviceImei,required"`
+	ServerFlagID int64              `url:"serverFlagId,required"`
+	ProNo        ProNumber          `url:"proNo,required"`
+	Platform     RequestPlatform    `url:"platform,required"`
+	RequestID    int64              `url:"requestId,required"`
+	CmdContent   string             `url:"cmdContent,required"`
+	CmdType      RequestCommandType `url:"cmdType"`
+	Language     string             `url:"language"`
+	Sync         bool               `url:"sync"`
+	OfflineFlag  bool               `url:"offlineFlag"`
+	Timeout      int                `url:"timeOut"`
+	Token        string             `url:"token"`
 }
 
-func (cli *IotHubClient) NewDeviceInstructionRequest(imei, command string) *DeviceInstructionRequest {
-	return &DeviceInstructionRequest{
-		BaseInstructRequest: BaseInstructRequest{
-			DeviceIMEI:   imei,
-			ProNo:        ProNoOnlineCommand,
-			Platform:     RequestPlatformWeb,
-			CmdType:      NormallnsCommandType,
-			Token:        cli.apiToken,
-			OfflineFlag:  true,
-			Timeout:      30,
-			Sync:         true,
-			RequestID:    getRequestID(),
-			ServerFlagID: getServerFlagID(),
-		},
-		CmdContent: command,
+func (cli *IotHubClient) NewDeviceInstructionRequest(imei, command string) *InstructRequest {
+	return &InstructRequest{
+		DeviceIMEI:   imei,
+		ProNo:        ProNoOnlineCommand,
+		Platform:     RequestPlatformWeb,
+		CmdType:      NormallnsCommandType,
+		Token:        cli.apiToken,
+		OfflineFlag:  true,
+		Timeout:      30,
+		Sync:         true,
+		RequestID:    getRequestID(),
+		ServerFlagID: getServerFlagID(),
+		CmdContent:   command,
 	}
 }
-func (cli *IotHubClient) SendDeviceInstruction(request *DeviceInstructionRequest) (*Response, error) {
+
+func (cli *IotHubClient) SendDeviceInstruction(request *InstructRequest) (*Response, error) {
 	values, err := query.Values(request)
 	if err != nil {
 		return nil, err

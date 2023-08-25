@@ -20,8 +20,9 @@ func TestIotHubClient_RealTimeAudioVideoTransmission(t *testing.T) {
 		VideoTCPPort:   "10002",
 		Channel:        "1",
 	})
-	resp, err := iothubcli.RealTimeAudioVideoTransmission(req)
+	resp, err := iothubcli.SendDeviceInstruction(req)
 	assert.NilError(t, err)
+	t.Log(resp)
 	assert.Assert(t, resp.Code == 0)
 	assert.Assert(t, resp.Data.Code == Success)
 }

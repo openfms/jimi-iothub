@@ -105,17 +105,3 @@ const (
 	MainStream RealTimeCodeStreamType = "0"
 	SubStream  RealTimeCodeStreamType = "1"
 )
-
-type BaseInstructRequest struct {
-	DeviceIMEI   string             `url:"deviceImei,required"`
-	ServerFlagID int64              `url:"serverFlagId,required"`
-	ProNo        ProNumber          `url:"proNo,required"`
-	Platform     RequestPlatform    `url:"platform,required"`
-	RequestID    int64              `url:"requestId,required"`
-	CmdType      RequestCommandType `url:"cmdType"`
-	Language     string             `url:"language"`
-	Sync         bool               `url:"sync"`
-	OfflineFlag  bool               `url:"offlineFlag"`
-	Timeout      int                `url:"timeOut"`
-	Token        string             `url:"token"`
-}

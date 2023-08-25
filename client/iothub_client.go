@@ -17,7 +17,7 @@ type IotHubClient struct {
 type JimiIotHub interface {
 	Stop()
 	EndpointURL() *url.URL
-	SendDeviceInstruction(request *DeviceInstructionRequest) (*Response, error)
+	SendDeviceInstruction(request *InstructRequest) (*Response, error)
 }
 
 func NewIotHubClient(endPoint, proxy, token string) (*IotHubClient, error) {
