@@ -92,3 +92,21 @@ func TestIotHubClient_HistoryVideoPlaybackRequest(t *testing.T) {
 	assert.Assert(t, resp.Code == 0)
 	assert.Assert(t, resp.Data.Code == Success)
 }
+
+func TestIotHubClient_HistoryPlaybackControlRequest(t *testing.T) {
+	endPoint := os.Getenv("IOTHUB_ENDPOINT")
+	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
+	iothubcli, err := NewIotHubClient(endPoint, "", "123456")
+	assert.NilError(t, err)
+	req := iothubcli.HistoryPlaybackControlRequest(deviceImei, &PlaybackControlCmdContent{
+		InstructionID: GenerateUniqueInstructionID(),
+		Channel:       1,
+		ForwardRewind: PlaybackSpeedInvalid,
+		BeginTime:     "230826113555",
+	})
+	resp, err := iothubcli.SendDeviceInstruction(req)
+	assert.NilError(t, err)
+	t.Log(resp)
+	assert.Assert(t, resp.Code == 0)
+	assert.Assert(t, resp.Data.Code == Success)
+}
