@@ -66,3 +66,29 @@ func TestIotHubClient_ListAVResourcesRequest(t *testing.T) {
 	assert.Assert(t, resp.Code == 0)
 	assert.Assert(t, resp.Data.Code == Success)
 }
+
+func TestIotHubClient_HistoryVideoPlaybackRequest(t *testing.T) {
+	endPoint := os.Getenv("IOTHUB_ENDPOINT")
+	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
+	iothubcli, err := NewIotHubClient(endPoint, "", "123456")
+	assert.NilError(t, err)
+	req := iothubcli.HistoryVideoPlaybackRequest(deviceImei, &PlaybackCmdContent{
+		InstructionID: GenerateUniqueInstructionID(),
+		TCPPort:       "10003",
+		UDPPort:       "0",
+		Channel:       "1",
+		ResourceType:  PlaybackResourceAudioAndVideo,
+		CodeType:      PlaybackAllStream,
+		StorageType:   PlaybackStorageAll,
+		ForwardRewind: Invalid,
+		PlayMethod:    PlayNormal,
+		BeginTime:     "230826113555",
+		EndTime:       "230826113854",
+		ServerAddress: "192.168.1.1",
+	})
+	resp, err := iothubcli.SendDeviceInstruction(req)
+	assert.NilError(t, err)
+	t.Log(resp)
+	assert.Assert(t, resp.Code == 0)
+	assert.Assert(t, resp.Data.Code == Success)
+}
