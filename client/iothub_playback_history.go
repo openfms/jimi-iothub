@@ -75,8 +75,6 @@ func (cli *IotHubClient) HistoryVideoPlaybackRequest(imei string, cmdContent *Pl
 			StorageType:   PlaybackStorageAll,
 			ForwardRewind: Invalid,
 			PlayMethod:    PlayNormal,
-			BeginTime:     "230826113555",
-			EndTime:       "230826113854",
 		}
 	}
 	jsonData, _ := json.Marshal(cmdContent)
