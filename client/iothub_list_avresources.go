@@ -2,7 +2,6 @@ package client
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 type AVResourceListCmdContent struct {
@@ -48,7 +47,7 @@ func (cli *IotHubClient) ListAVResourcesRequest(imei string, cmdContent *AVResou
 			ResourceType:  ResourceAudioAndVideo,
 			CodeType:      CodeTypeAllStream,
 			StorageType:   StorageTypeAllStorage,
-			InstructionID: fmt.Sprintf("%d", GenerateUniqueInstructionID()),
+			InstructionID: GenerateUniqueInstructionID(),
 		}
 	}
 	jsonData, _ := json.Marshal(cmdContent)

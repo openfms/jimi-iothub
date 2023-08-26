@@ -94,17 +94,11 @@ type ResponseData struct {
 	RouteServerTime string       `json:"_route_server_time"`
 }
 
-func GenerateUniqueInstructionID() int {
+func GenerateUniqueInstructionID() string {
 	// Generate a random number between 0 and 999999999
-	rand.Seed(time.Now().UnixNano())
-	randomNumber := rand.Intn(1000000000)
 
-	// Ensure the random number is exactly 9 digits by adding leading zeros
-	paddedNumber := fmt.Sprintf("%09d", randomNumber)
+	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randomNumber := rnd.Intn(1000000000)
 
-	// Convert the padded number to an integer
-	uniqueID := 0
-	fmt.Sscanf(paddedNumber, "%d", &uniqueID)
-
-	return uniqueID
+	return fmt.Sprintf("%09d", randomNumber)
 }
