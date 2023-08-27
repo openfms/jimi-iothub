@@ -6,19 +6,17 @@ import (
 	"testing"
 )
 
-func TestIotHubClient_RealTimeAudioVideoTransmission(t *testing.T) {
+func TestIotHubClient_HistoryPlaybackControlRequest(t *testing.T) {
 	env, err := ReadIotHubEnvironments()
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
 	iothubcli, err := NewIotHubClient(env)
 	assert.NilError(t, err)
-	req, err := iothubcli.RealTimeAVRequest(deviceImei, DeviceModelJC450, &RealTimeCmdContent{
-		DataType:       AudioVideoDataType,
-		CodeStreamType: MainStream,
-		VideoUDPPort:   "0",
-		VideoIP:        "192.168.1.1",
-		VideoTCPPort:   "10002",
-		Channel:        "1",
+	req, err := iothubcli.HistoryPlaybackControlRequest(deviceImei, DeviceModelJC450, &PlaybackControlCmdContent{
+		InstructionID: GenerateUniqueInstructionID(),
+		Channel:       1,
+		ForwardRewind: PlaybackSpeedInvalid,
+		BeginTime:     "230826113555",
 	})
 	assert.NilError(t, err)
 	resp, err := iothubcli.SendDeviceInstruction(req)

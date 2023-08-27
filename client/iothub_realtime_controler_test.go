@@ -6,21 +6,18 @@ import (
 	"testing"
 )
 
-func TestIotHubClient_RealTimeAudioVideoTransmission(t *testing.T) {
+func TestIotHubClient_RealTimeAVControlRequest(t *testing.T) {
 	env, err := ReadIotHubEnvironments()
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
 	iothubcli, err := NewIotHubClient(env)
 	assert.NilError(t, err)
-	req, err := iothubcli.RealTimeAVRequest(deviceImei, DeviceModelJC450, &RealTimeCmdContent{
-		DataType:       AudioVideoDataType,
-		CodeStreamType: MainStream,
-		VideoUDPPort:   "0",
-		VideoIP:        "192.168.1.1",
-		VideoTCPPort:   "10002",
-		Channel:        "1",
+	req, err := iothubcli.RealTimeAVControlRequest(deviceImei, DeviceModelJC450, &RealTimeControlCmdContent{
+		DataType:       TurnOffBothAudioAndVideo,
+		CodeStreamType: ControllerMainStream,
+		Channel:        1,
+		Cmd:            CmdTurnOffAVTransmission,
 	})
-	assert.NilError(t, err)
 	resp, err := iothubcli.SendDeviceInstruction(req)
 	assert.NilError(t, err)
 	t.Log(resp)
