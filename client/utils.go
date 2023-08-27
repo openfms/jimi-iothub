@@ -122,6 +122,6 @@ var (
 )
 
 const (
-	RedisServerFlagIDKey = "iothub.flagid"
-	RedisRequestIDKey    = "iothub.requestid"
+	RedisServerFlagIDKey = "jimi.iothub.flagid"
+	RedisRequestIDKey    = "jimi.iothub.requestid"
 )
