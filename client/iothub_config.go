@@ -15,6 +15,7 @@ type IotHubConfig struct {
 	HistoryVideoPort       string `env:"HISTORY_VIDEO_PORT" envDefault:"10003"`
 	APIPort                string `env:"API_PORT" envDefault:"9080"`
 	InstructionServicePort string `env:"INSTRUCTION_SERVICE_PORT" envDefault:"10088"`
+	RedisURL               string `env:"REDIS_URL"`
 }
 
 func ReadIotHubEnvironments() (*IotHubConfig, error) {

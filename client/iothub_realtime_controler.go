@@ -1,6 +1,9 @@
 package client
 
-import "encoding/json"
+import (
+	"context"
+	"encoding/json"
+)
 
 type RealTimeControlCmd string
 
@@ -34,7 +37,7 @@ type RealTimeControlCmdContent struct {
 	CodeStreamType RealTimeControllerCodeStreamType `json:"codeStreamType"`
 }
 
-func (cli *IotHubClient) RealTimeAVControlRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error) {
+func (cli *IotHubClient) RealTimeAVControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
 		return nil, ErrEmptyCmdContent
 	}
@@ -51,7 +54,7 @@ func (cli *IotHubClient) RealTimeAVControlRequest(imei string, deviceModel Devic
 		cmdContent.Cmd = CmdResumeStream
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(ctx, imei, string(jsonData))
 	if err != nil {
 		return nil, err
 	}

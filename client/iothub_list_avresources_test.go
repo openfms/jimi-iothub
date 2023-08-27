@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"gotest.tools/v3/assert"
 	"os"
 	"testing"
@@ -10,9 +11,10 @@ func TestIotHubClient_ListAVResourcesRequest(t *testing.T) {
 	env, err := ReadIotHubEnvironments()
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
-	iotHubCli, err := NewIotHubClient(env)
+	ctx := context.Background()
+	iotHubCli, err := NewIotHubClient(env, nil)
 	assert.NilError(t, err)
-	req, err := iotHubCli.ListAVResourcesRequest(deviceImei, DeviceModelJC450, &AVResourceListCmdContent{
+	req, err := iotHubCli.ListAVResourcesRequest(ctx, deviceImei, DeviceModelJC450, &AVResourceListCmdContent{
 		Channel:       0,
 		AlarmFlag:     0,
 		ResourceType:  ResourceAudioAndVideo,
@@ -23,7 +25,7 @@ func TestIotHubClient_ListAVResourcesRequest(t *testing.T) {
 		EndTime:       "230826113854",
 	})
 	assert.NilError(t, err)
-	resp, err := iotHubCli.SendDeviceInstruction(req)
+	resp, err := iotHubCli.SendDeviceInstruction(ctx, req)
 	assert.NilError(t, err)
 	t.Log(resp)
 	assert.Assert(t, resp.Code == 0)

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 )
@@ -40,7 +41,7 @@ const (
 	StorageTypeDisasterRecoveryStorage ResourceListStorageType = 2
 )
 
-func (cli *IotHubClient) ListAVResourcesRequest(imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error) {
+func (cli *IotHubClient) ListAVResourcesRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
 		return nil, ErrEmptyCmdContent
 	}
@@ -57,7 +58,7 @@ func (cli *IotHubClient) ListAVResourcesRequest(imei string, deviceModel DeviceM
 		return nil, fmt.Errorf("field end_time is empty")
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(ctx, imei, string(jsonData))
 	if err != nil {
 		return nil, err
 	}

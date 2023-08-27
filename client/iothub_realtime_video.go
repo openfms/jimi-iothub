@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
 )
 
@@ -31,7 +32,7 @@ type RealTimeCmdContent struct {
 	VideoUDPPort   string                 `json:"videoUDPPort"`
 }
 
-func (cli *IotHubClient) RealTimeAVRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error) {
+func (cli *IotHubClient) RealTimeAVRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
 		return nil, ErrEmptyCmdContent
 	}
@@ -54,7 +55,7 @@ func (cli *IotHubClient) RealTimeAVRequest(imei string, deviceModel DeviceModel,
 		cmdContent.VideoIP = cli.endPointURL.Host
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(ctx, imei, string(jsonData))
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/google/go-querystring/query"
 	"sync"
@@ -42,9 +43,24 @@ type InstructRequest struct {
 	Token        string             `url:"token"`
 }
 
-func (cli *IotHubClient) DeviceInstructionRequest(imei string, command string) (*InstructRequest, error) {
+func (cli *IotHubClient) DeviceInstructionRequest(ctx context.Context, imei string, command string) (*InstructRequest, error) {
 	if len(command) == 0 {
 		return nil, ErrEmptyCmdContent
+	}
+	var (
+		reqID  = getRequestID()
+		flagID = getServerFlagID()
+		err    error
+	)
+	if cli.redis != nil {
+		reqID, err = cli.redis.Incr(ctx, RedisRequestIDKey).Result()
+		if err != nil {
+			return nil, err
+		}
+		flagID, err = cli.redis.Incr(ctx, RedisServerFlagIDKey).Result()
+		if err != nil {
+			return nil, err
+		}
 	}
 	return &InstructRequest{
 		DeviceIMEI:   imei,
@@ -55,19 +71,20 @@ func (cli *IotHubClient) DeviceInstructionRequest(imei string, command string) (
 		OfflineFlag:  true,
 		Timeout:      30,
 		Sync:         true,
-		RequestID:    getRequestID(),
-		ServerFlagID: getServerFlagID(),
+		RequestID:    reqID,
+		ServerFlagID: flagID,
 		CmdContent:   command,
 	}, nil
 }
 
-func (cli *IotHubClient) SendDeviceInstruction(request *InstructRequest) (*Response, error) {
+func (cli *IotHubClient) SendDeviceInstruction(ctx context.Context, request *InstructRequest) (*Response, error) {
 	values, err := query.Values(request)
 	if err != nil {
 		return nil, err
 	}
 	// Send the POST request with x-www-form-urlencoded data
 	resp, err := cli.client.R().
+		SetContext(ctx).
 		SetBody(values.Encode()).
 		Post(cli.endPointURL.String() + "/api/device/sendInstruct")
 

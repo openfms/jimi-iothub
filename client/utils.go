@@ -120,3 +120,8 @@ var (
 	ErrUnsupportedRequest = errors.New("request not supported by device model")
 	ErrEmptyCmdContent    = errors.New("command content is empty")
 )
+
+const (
+	RedisServerFlagIDKey = "iothub.flagid"
+	RedisRequestIDKey    = "iothub.requestid"
+)

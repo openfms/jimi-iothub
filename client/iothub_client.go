@@ -1,8 +1,10 @@
 package client
 
 import (
+	"context"
 	"github.com/go-resty/resty/v2"
 	"github.com/openfms/jimi-iothub/utils"
+	"github.com/redis/go-redis/v9"
 	"net/url"
 	"sync"
 )
@@ -10,6 +12,7 @@ import (
 type IotHubClient struct {
 	client      *resty.Client
 	config      *IotHubConfig
+	redis       *redis.Client
 	endPointURL *url.URL
 	wg          *sync.WaitGroup
 }
@@ -17,17 +20,21 @@ type IotHubClient struct {
 type JimiIotHub interface {
 	Stop()
 	EndpointURL() *url.URL
-	SendDeviceInstruction(request *InstructRequest) (*Response, error)
+	SendDeviceInstruction(ctx context.Context, request *InstructRequest) (*Response, error)
 
-	DeviceInstructionRequest(imei string, deviceModel DeviceModel, command string) (*InstructRequest, error)
-	RealTimeAVRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error)
-	RealTimeAVControlRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error)
-	ListAVResourcesRequest(imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error)
-	HistoryVideoPlaybackRequest(imei string, deviceModel DeviceModel, cmdContent *PlaybackCmdContent) (*InstructRequest, error)
-	HistoryPlaybackControlRequest(imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error)
+	DeviceInstructionRequest(ctx context.Context, imei string, command string) (*InstructRequest, error)
+	RealTimeAVRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error)
+	RealTimeAVControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error)
+	ListAVResourcesRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error)
+	HistoryVideoPlaybackRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackCmdContent) (*InstructRequest, error)
+	HistoryPlaybackControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error)
 }
 
-func NewIotHubClient(config *IotHubConfig) (*IotHubClient, error) {
+var (
+	_ JimiIotHub = &IotHubClient{}
+)
+
+func NewIotHubClient(config *IotHubConfig, redisCli *redis.Client) (*IotHubClient, error) {
 	endPointURL, err := utils.GetEndpointURL(config.EndPoint)
 	if err != nil {
 		return nil, err
@@ -45,6 +52,7 @@ func NewIotHubClient(config *IotHubConfig) (*IotHubClient, error) {
 		wg:          &sync.WaitGroup{},
 		endPointURL: endPointURL,
 		config:      config,
+		redis:       redisCli,
 	}, nil
 }
 

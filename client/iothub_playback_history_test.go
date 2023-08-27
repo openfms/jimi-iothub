@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"gotest.tools/v3/assert"
 	"os"
 	"testing"
@@ -10,9 +11,10 @@ func TestIotHubClient_HistoryVideoPlaybackRequest(t *testing.T) {
 	env, err := ReadIotHubEnvironments()
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
-	iothubcli, err := NewIotHubClient(env)
+	ctx := context.Background()
+	iothubcli, err := NewIotHubClient(env, nil)
 	assert.NilError(t, err)
-	req, err := iothubcli.HistoryVideoPlaybackRequest(deviceImei, DeviceModelJC450, &PlaybackCmdContent{
+	req, err := iothubcli.HistoryVideoPlaybackRequest(ctx, deviceImei, DeviceModelJC450, &PlaybackCmdContent{
 		InstructionID: GenerateUniqueInstructionID(),
 		TCPPort:       "10003",
 		UDPPort:       "0",
@@ -27,7 +29,7 @@ func TestIotHubClient_HistoryVideoPlaybackRequest(t *testing.T) {
 		ServerAddress: "192.168.1.1",
 	})
 	assert.NilError(t, err)
-	resp, err := iothubcli.SendDeviceInstruction(req)
+	resp, err := iothubcli.SendDeviceInstruction(ctx, req)
 	assert.NilError(t, err)
 	t.Log(resp)
 	assert.Assert(t, resp.Code == 0)

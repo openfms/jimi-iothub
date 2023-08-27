@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 )
@@ -36,7 +37,7 @@ type PlaybackControlCmdContent struct {
 	InstructionID string `json:"instructionID"`
 }
 
-func (cli *IotHubClient) HistoryPlaybackControlRequest(imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error) {
+func (cli *IotHubClient) HistoryPlaybackControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
 		return nil, ErrEmptyCmdContent
 	}
@@ -53,7 +54,7 @@ func (cli *IotHubClient) HistoryPlaybackControlRequest(imei string, deviceModel 
 		return nil, fmt.Errorf("field begin_time is empty")
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(ctx, imei, string(jsonData))
 	if err != nil {
 		return nil, err
 	}
