@@ -110,3 +110,15 @@ const (
 func VideoResolutionSub(resolution VideoResolution) string {
 	return fmt.Sprintf("%s,%d", VIDEORESOLUTION_SUB, resolution)
 }
+
+type SpeedUnit uint8
+
+const (
+	SpeedUnitKmh SpeedUnit = 0
+	SpeedUnitMph SpeedUnit = 1
+)
+
+// SetSpeedUnit Set the unit of speed on the overlay of video
+func SetSpeedUnit(speedUnit VideoResolution) string {
+	return fmt.Sprintf("%s,%d", MILE, speedUnit)
+}
