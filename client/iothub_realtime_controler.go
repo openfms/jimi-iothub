@@ -34,17 +34,27 @@ type RealTimeControlCmdContent struct {
 	CodeStreamType RealTimeControllerCodeStreamType `json:"codeStreamType"`
 }
 
-func (cli *IotHubClient) RealTimeAVControlRequest(imei string, cmdContent *RealTimeControlCmdContent) *InstructRequest {
+func (cli *IotHubClient) RealTimeAVControlRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
-		cmdContent = &RealTimeControlCmdContent{
-			Channel:        1,
-			Cmd:            CmdTurnOffAVTransmission,
-			DataType:       TurnOffBothAudioAndVideo,
-			CodeStreamType: ControllerMainStream,
-		}
+		return nil, ErrEmptyCmdContent
+	}
+	if deviceModel < DeviceModelJC450 {
+		return nil, ErrUnsupportedRequest
+	}
+	if len(cmdContent.DataType) == 0 {
+		cmdContent.DataType = TurnOffBothAudioAndVideo
+	}
+	if cmdContent.Channel == 0 {
+		cmdContent.Channel = 1
+	}
+	if len(cmdContent.Cmd) == 0 {
+		cmdContent.Cmd = CmdResumeStream
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	if err != nil {
+		return nil, err
+	}
 	req.ProNo = ProNoAudioVideoTransmissionControl
-	return req
+	return req, nil
 }

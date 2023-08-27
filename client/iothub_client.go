@@ -9,7 +9,7 @@ import (
 
 type IotHubClient struct {
 	client      *resty.Client
-	apiToken    string
+	config      *IotHubConfig
 	endPointURL *url.URL
 	wg          *sync.WaitGroup
 }
@@ -18,16 +18,17 @@ type JimiIotHub interface {
 	Stop()
 	EndpointURL() *url.URL
 	SendDeviceInstruction(request *InstructRequest) (*Response, error)
-	RealTimeAVRequest(imei string, cmdContent *RealTimeCmdContent) *InstructRequest
-	DeviceInstructionRequest(imei, command string) *InstructRequest
-	RealTimeAVControlRequest(imei string, cmdContent *RealTimeControlCmdContent) *InstructRequest
-	ListAVResourcesRequest(imei string, cmdContent *AVResourceListCmdContent) *InstructRequest
-	HistoryVideoPlaybackRequest(imei string, cmdContent *PlaybackCmdContent) *InstructRequest
-	HistoryPlaybackControlRequest(imei string, cmdContent *PlaybackControlCmdContent) *InstructRequest
+
+	DeviceInstructionRequest(imei string, deviceModel DeviceModel, command string) (*InstructRequest, error)
+	RealTimeAVRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error)
+	RealTimeAVControlRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error)
+	ListAVResourcesRequest(imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error)
+	HistoryVideoPlaybackRequest(imei string, deviceModel DeviceModel, cmdContent *PlaybackCmdContent) (*InstructRequest, error)
+	HistoryPlaybackControlRequest(imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error)
 }
 
-func NewIotHubClient(endPoint, proxy, token string) (*IotHubClient, error) {
-	endPointURL, err := utils.GetEndpointURL(endPoint)
+func NewIotHubClient(config *IotHubConfig) (*IotHubClient, error) {
+	endPointURL, err := utils.GetEndpointURL(config.EndPoint)
 	if err != nil {
 		return nil, err
 	}
@@ -36,14 +37,14 @@ func NewIotHubClient(endPoint, proxy, token string) (*IotHubClient, error) {
 		SetHeaders(map[string]string{
 			"Content-Type": "application/x-www-form-urlencoded",
 		})
-	if len(proxy) > 0 {
-		client.SetProxy(proxy)
+	if len(config.Proxy) > 0 {
+		client.SetProxy(config.Proxy)
 	}
 	return &IotHubClient{
 		client:      client,
 		wg:          &sync.WaitGroup{},
 		endPointURL: endPointURL,
-		apiToken:    token,
+		config:      config,
 	}, nil
 }
 

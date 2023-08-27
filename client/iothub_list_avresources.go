@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type AVResourceListCmdContent struct {
@@ -39,19 +40,27 @@ const (
 	StorageTypeDisasterRecoveryStorage ResourceListStorageType = 2
 )
 
-func (cli *IotHubClient) ListAVResourcesRequest(imei string, cmdContent *AVResourceListCmdContent) *InstructRequest {
+func (cli *IotHubClient) ListAVResourcesRequest(imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
-		cmdContent = &AVResourceListCmdContent{
-			Channel:       0,
-			AlarmFlag:     0,
-			ResourceType:  ResourceAudioAndVideo,
-			CodeType:      CodeTypeAllStream,
-			StorageType:   StorageTypeAllStorage,
-			InstructionID: GenerateUniqueInstructionID(),
-		}
+		return nil, ErrEmptyCmdContent
+	}
+	if deviceModel < DeviceModelJC450 {
+		return nil, ErrUnsupportedRequest
+	}
+	if len(cmdContent.InstructionID) == 0 {
+		cmdContent.InstructionID = GenerateUniqueInstructionID()
+	}
+	if len(cmdContent.BeginTime) == 0 {
+		return nil, fmt.Errorf("field begin_time is empty")
+	}
+	if len(cmdContent.EndTime) == 0 {
+		return nil, fmt.Errorf("field end_time is empty")
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	if err != nil {
+		return nil, err
+	}
 	req.ProNo = ProNoQueryAudioVideoResourceList
-	return req
+	return req, nil
 }

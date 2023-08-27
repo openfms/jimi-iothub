@@ -1,6 +1,9 @@
 package client
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type PlaybackControl byte
 
@@ -33,17 +36,27 @@ type PlaybackControlCmdContent struct {
 	InstructionID string `json:"instructionID"`
 }
 
-func (cli *IotHubClient) HistoryPlaybackControlRequest(imei string, cmdContent *PlaybackControlCmdContent) *InstructRequest {
+func (cli *IotHubClient) HistoryPlaybackControlRequest(imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
-		cmdContent = &PlaybackControlCmdContent{
-			InstructionID: GenerateUniqueInstructionID(),
-			Channel:       1,
-			ForwardRewind: PlaybackSpeedInvalid,
-			PlayCtrl:      PlaybackStart,
-		}
+		return nil, ErrEmptyCmdContent
+	}
+	if deviceModel < DeviceModelJC450 {
+		return nil, ErrUnsupportedRequest
+	}
+	if len(cmdContent.InstructionID) == 0 {
+		cmdContent.InstructionID = GenerateUniqueInstructionID()
+	}
+	if cmdContent.Channel == 0 {
+		cmdContent.Channel = 1
+	}
+	if len(cmdContent.BeginTime) == 0 {
+		return nil, fmt.Errorf("field begin_time is empty")
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	if err != nil {
+		return nil, err
+	}
 	req.ProNo = ProNoRemoteVideoPlaybackControl
-	return req
+	return req, nil
 }

@@ -42,20 +42,23 @@ type InstructRequest struct {
 	Token        string             `url:"token"`
 }
 
-func (cli *IotHubClient) DeviceInstructionRequest(imei, command string) *InstructRequest {
+func (cli *IotHubClient) DeviceInstructionRequest(imei string, command string) (*InstructRequest, error) {
+	if len(command) == 0 {
+		return nil, ErrEmptyCmdContent
+	}
 	return &InstructRequest{
 		DeviceIMEI:   imei,
 		ProNo:        ProNoOnlineCommand,
 		Platform:     RequestPlatformWeb,
 		CmdType:      NormallnsCommandType,
-		Token:        cli.apiToken,
+		Token:        cli.config.Token,
 		OfflineFlag:  true,
 		Timeout:      30,
 		Sync:         true,
 		RequestID:    getRequestID(),
 		ServerFlagID: getServerFlagID(),
 		CmdContent:   command,
-	}
+	}, nil
 }
 
 func (cli *IotHubClient) SendDeviceInstruction(request *InstructRequest) (*Response, error) {

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -102,3 +103,20 @@ func GenerateUniqueInstructionID() string {
 
 	return fmt.Sprintf("%09d", randomNumber)
 }
+
+type DeviceModel uint8
+
+const (
+	DeviceModelJC120  = 1
+	DeviceModelJC170  = 2
+	DeviceModelJC200  = 3
+	DeviceModelJC400  = 4
+	DeviceModelJC400P = 5
+	DeviceModelJC400D = 6
+	DeviceModelJC450  = 7
+)
+
+var (
+	ErrUnsupportedRequest = errors.New("request not supported by device model")
+	ErrEmptyCmdContent    = errors.New("command content is empty")
+)

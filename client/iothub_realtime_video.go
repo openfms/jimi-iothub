@@ -31,18 +31,33 @@ type RealTimeCmdContent struct {
 	VideoUDPPort   string                 `json:"videoUDPPort"`
 }
 
-func (cli *IotHubClient) RealTimeAVRequest(imei string, cmdContent *RealTimeCmdContent) *InstructRequest {
+func (cli *IotHubClient) RealTimeAVRequest(imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error) {
 	if cmdContent == nil {
-		cmdContent = &RealTimeCmdContent{
-			DataType:       AudioVideoDataType,
-			CodeStreamType: MainStream,
-			Channel:        "1",
-			VideoTCPPort:   "10002",
-			VideoUDPPort:   "0",
-		}
+		return nil, ErrEmptyCmdContent
+	}
+	if deviceModel < DeviceModelJC450 {
+		return nil, ErrUnsupportedRequest
+	}
+	if len(cmdContent.DataType) == 0 {
+		cmdContent.DataType = AudioVideoDataType
+	}
+	if len(cmdContent.CodeStreamType) == 0 {
+		cmdContent.CodeStreamType = MainStream
+	}
+	if len(cmdContent.Channel) == 0 {
+		cmdContent.Channel = "0"
+	}
+	if len(cmdContent.VideoTCPPort) == 0 {
+		cmdContent.VideoTCPPort = cli.config.LiveVideoPort
+	}
+	if len(cmdContent.VideoIP) == 0 {
+		cmdContent.VideoIP = cli.endPointURL.Host
 	}
 	jsonData, _ := json.Marshal(cmdContent)
-	req := cli.DeviceInstructionRequest(imei, string(jsonData))
+	req, err := cli.DeviceInstructionRequest(imei, string(jsonData))
+	if err != nil {
+		return nil, err
+	}
 	req.ProNo = ProNoRealTimeAudioVideoRequest
-	return req
+	return req, nil
 }
