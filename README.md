@@ -1,6 +1,6 @@
 <div align="right">
     <a href="https://www.jimilab.com/">
-        <img src="https://www.jimilab.com/wp-content/uploads/2022/09/logo.png" alt="jimi Logo">
+        <img src="https://www.jimilab.com/wp-content/uploads/2022/09/logo.png" alt="jimi Logo" width="200">
     </a>
 </div>
 
