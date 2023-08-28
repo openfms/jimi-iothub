@@ -15,6 +15,7 @@ The IoT Hub Client Library for Go language is a powerful and user-friendly libra
 ```bash
 go get github.com/openfms/jimi-iothub
 ```
+here is an exmaple of sending `STATUS` command to device
 ```go
 import iothub "github.com/openfms/jimi-iothub"
 
