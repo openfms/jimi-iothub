@@ -1,5 +1,10 @@
+<div align="right">
+    <a href="https://www.jimilab.com/">
+        <img src="https://www.jimilab.com/wp-content/uploads/2022/09/logo.png" alt="jimi Logo">
+    </a>
+</div>
+
 # jimi-iothub
-[![jimi Logo](https://www.jimilab.com/wp-content/uploads/2022/09/logo.png)](https://www.jimilab.com/)
 [![Documentation](https://img.shields.io/badge/Documentation-Read%20Now-blue.svg)](https://docs.jimicloud.com/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
