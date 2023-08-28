@@ -42,6 +42,7 @@ func main(){
         panic(err)
     }
 }
+
 ```
 ## Interfaces
 We've designed two interfaces for seamless integration: one for making API calls and another for generating commands.
@@ -51,37 +52,37 @@ Explore the commands available in our IoT Hub Client Library. While we're active
 
 ```Go
 type DeviceCommands interface {
-	GenerateCommand(command DeviceCommand, params ...string) string
+    GenerateCommand(command DeviceCommand, params ...string) string
 
-	CoreKitSwitch(mode CoreKitMode) string
-	ModifyHttpUploadServer(url string) string
-	SetHttpUploadLimit(retryCount, retryInterval uint8) string
-	SetRtmpServer(url string) string
-	SetFileListServer(url string) string
-	SetTCPServer(host HostType, serverAddr string, port uint16) string
-	CapturePicture(camera CameraType) string
-	CaptureVideo(camera CameraType, seconds uint8) string
-	RtmpLiveStream(OnOff OnOffState, camera CameraType, pushDuration uint8) string
-	UploadPlaybackVideosList() string
-	ReplayVideoList(videoNames []string) string
-	RtmpLogin(userName, password string) string
-	UploadHistoryVideo(timeStamp string, cameraType HistoryCameraType) string
-	UploadEventVideo(timeStamp string, cameraType HistoryCameraType, lengthSecond uint8) string
-	UploadEventFile(fileName string) string
+    CoreKitSwitch(mode CoreKitMode) string
+    ModifyHttpUploadServer(url string) string
+    SetHttpUploadLimit(retryCount, retryInterval uint8) string
+    SetRtmpServer(url string) string
+    SetFileListServer(url string) string
+    SetTCPServer(host HostType, serverAddr string, port uint16) string
+    CapturePicture(camera CameraType) string
+    CaptureVideo(camera CameraType, seconds uint8) string
+    RtmpLiveStream(OnOff OnOffState, camera CameraType, pushDuration uint8) string
+    UploadPlaybackVideosList() string
+    ReplayVideoList(videoNames []string) string
+    RtmpLogin(userName, password string) string
+    UploadHistoryVideo(timeStamp string, cameraType HistoryCameraType) string
+    UploadEventVideo(timeStamp string, cameraType HistoryCameraType, lengthSecond uint8) string
+    UploadEventFile(fileName string) string
 
-	RecordAudio(state EnableDisable) string
-	RecordAudioSub(state EnableDisable) string
-	RecordSwitch(camera RecordSwitchCamera, state EnableDisable) string
-	Mirror(state OnOffState) string
-	Rotation(camera CameraInOut, rotation RotationDegree) string
-	SetInwardVideoQuality(quality VideoQualityInward) string
-	SetOutVideoQuality(quality VideoQualityOut) string
-	VideoResolutionSub(resolution VideoResolution) string
-	SetSpeedUnit(speedUnit VideoResolution) string
+    RecordAudio(state EnableDisable) string
+    RecordAudioSub(state EnableDisable) string
+    RecordSwitch(camera RecordSwitchCamera, state EnableDisable) string
+    Mirror(state OnOffState) string
+    Rotation(camera CameraInOut, rotation RotationDegree) string
+    SetInwardVideoQuality(quality VideoQualityInward) string
+    SetOutVideoQuality(quality VideoQualityOut) string
+    VideoResolutionSub(resolution VideoResolution) string
+    SetSpeedUnit(speedUnit VideoResolution) string
 
-	ChangePassword(oldPassword, newPassword string) string
-	SetDeviceVolume(level VolumeLevel) string
-	SetLEDOnOff(state OnOffState) string
+    ChangePassword(oldPassword, newPassword string) string
+    SetDeviceVolume(level VolumeLevel) string
+    SetLEDOnOff(state OnOffState) string
 }
 ```
 
@@ -89,16 +90,16 @@ type DeviceCommands interface {
 
 ```Go
 type JimiIotHub interface {
-	Stop()
-	EndpointURL() *url.URL
-	SendDeviceInstruction(ctx context.Context, request *InstructRequest) (*Response, error)
+    Stop()
+    EndpointURL() *url.URL
+    SendDeviceInstruction(ctx context.Context, request *InstructRequest) (*Response, error)
 
-	DeviceInstructionRequest(ctx context.Context, imei string, command string) (*InstructRequest, error)
-	RealTimeAVRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error)
-	RealTimeAVControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error)
-	ListAVResourcesRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error)
-	HistoryVideoPlaybackRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackCmdContent) (*InstructRequest, error)
-	HistoryPlaybackControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error)
+    DeviceInstructionRequest(ctx context.Context, imei string, command string) (*InstructRequest, error)
+    RealTimeAVRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error)
+    RealTimeAVControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeControlCmdContent) (*InstructRequest, error)
+    ListAVResourcesRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *AVResourceListCmdContent) (*InstructRequest, error)
+    HistoryVideoPlaybackRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackCmdContent) (*InstructRequest, error)
+    HistoryPlaybackControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error)
 }
 
 ```
