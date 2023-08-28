@@ -1,7 +1,12 @@
 # jimi-iothub
+[![jimi Logo](https://www.jimilab.com/wp-content/uploads/2022/09/logo.png)](https://www.jimilab.com/)
+[![Documentation](https://img.shields.io/badge/Documentation-Read%20Now-blue.svg)](https://docs.jimicloud.com/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+
 The IoT Hub Client Library for Go language is a powerful and user-friendly library designed to simplify the process of interacting with Jimi IoT Hub in Golang. This library provides an abstraction layer over the complex IoT Hub protocols, allowing developers to focus on building and managing their IoT solutions.
+
+For detailed information and usage examples, please refer to our [documentation](https://docs.jimicloud.com/).
 
 ## Features
 - **Device Management:** Easily manage jimi devices within the IoT Hub.
