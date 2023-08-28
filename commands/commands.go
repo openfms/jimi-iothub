@@ -2,6 +2,40 @@ package commands
 
 import "strings"
 
+type DeviceCommands interface {
+	GenerateCommand(command DeviceCommand, params ...string) string
+
+	CoreKitSwitch(mode CoreKitMode) string
+	ModifyHttpUploadServer(url string) string
+	SetHttpUploadLimit(retryCount, retryInterval uint8) string
+	SetRtmpServer(url string) string
+	SetFileListServer(url string) string
+	SetTCPServer(host HostType, serverAddr string, port uint16) string
+	CapturePicture(camera CameraType) string
+	CaptureVideo(camera CameraType, seconds uint8) string
+	RtmpLiveStream(OnOff OnOffState, camera CameraType, pushDuration uint8) string
+	UploadPlaybackVideosList() string
+	ReplayVideoList(videoNames []string) string
+	RtmpLogin(userName, password string) string
+	UploadHistoryVideo(timeStamp string, cameraType HistoryCameraType) string
+	UploadEventVideo(timeStamp string, cameraType HistoryCameraType, lengthSecond uint8) string
+	UploadEventFile(fileName string) string
+
+	RecordAudio(state EnableDisable) string
+	RecordAudioSub(state EnableDisable) string
+	RecordSwitch(camera RecordSwitchCamera, state EnableDisable) string
+	Mirror(state OnOffState) string
+	Rotation(camera CameraInOut, rotation RotationDegree) string
+	SetInwardVideoQuality(quality VideoQualityInward) string
+	SetOutVideoQuality(quality VideoQualityOut) string
+	VideoResolutionSub(resolution VideoResolution) string
+	SetSpeedUnit(speedUnit VideoResolution) string
+
+	ChangePassword(oldPassword, newPassword string) string
+	SetDeviceVolume(level VolumeLevel) string
+	SetLEDOnOff(state OnOffState) string
+}
+
 // DeviceCommand represents a command type
 type DeviceCommand string
 
