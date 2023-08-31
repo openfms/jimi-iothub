@@ -105,7 +105,7 @@ const (
 
 // RtmpLiveStream enables,disables live video stream
 // duration should be between 2 and 180 minute default is 15.
-// Example: Video,in,3s
+// Example: RTMP,ON,OUT
 func RtmpLiveStream(OnOff OnOffState, camera CameraType, pushDuration uint8) string {
 	if pushDuration > 0 {
 		return fmt.Sprintf("%s,%s,%s,%d", RTMP, OnOff, camera, pushDuration)
