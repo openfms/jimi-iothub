@@ -2,34 +2,185 @@ package client
 
 import (
 	"fmt"
-	"github.com/openfms/jimi-iothub/utils"
 	"net"
+	"net/url"
+	"regexp"
+	"strings"
+)
+
+const (
+	HttpFLVLiveLinkFormat    = "{{FlvAddress}}/{{Prefix}}/{{channel}}/{{IMEI}}.flv"
+	HttpFLVHistoryLinkFormat = "{{FlvAddress}}/{{channel}}/{{IMEI}}.history.flv"
+	HttpFLVReplayLinkFormat  = "{{FlvAddress}}/{{Prefix}}/{{IMEI}}.flv"
+	RtmpLiveLinkFormat       = "{{RtmpAddress}}/{{Prefix}}/{{channel}}/{{IMEI}}"
+	validEndpointRegex       = `^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}|(?:\d{1,3}\.){3}\d{1,3})(?::\d{1,5})?$`
 )
 
 type VideoLinks struct {
-	RtmpLink, FlvLink string
+	RtmpLiveLink, FlvLiveLink     string
+	FLVHistoryLink, FLVReplayLink string
 }
 
-func (cli *IotHubClient) GenerateHttpFlvLink(secure bool, prefix string, channel int, imei string) (string, error) {
-	return utils.GenerateHttpFLVLink(secure, cli.endPointURL.String(), prefix, channel, imei)
+// GenerateHttpFLVLiveLink generates flv live video link
+// Example: http://example.com:8881/live/0/86271111111111.flv
+func GenerateHttpFLVLiveLink(secure bool, endpoint, prefix string, channel int, imei string) (string, error) {
+	scheme := "http"
+	if secure {
+		scheme = "https"
+	}
+	// Construct a secured endpoint URL.
+	endpointURLStr := scheme + "://" + endpoint
+	endpointURL, err := url.Parse(endpointURLStr)
+	if err != nil {
+		return "", err
+	}
+	// Validate incoming endpoint URL.
+	if !regexp.MustCompile(validEndpointRegex).MatchString(endpointURL.Host) || endpointURL.Path != "" {
+		return "", fmt.Errorf("%s is an invalid endpoint", endpointURL.String())
+	}
+	replacer := strings.NewReplacer(
+		"{{FlvAddress}}", endpointURL.String(),
+		"{{Prefix}}", prefix,
+		"{{channel}}", fmt.Sprintf("%d", channel),
+		"{{IMEI}}", imei,
+	)
+	format := HttpFLVLiveLinkFormat
+	if prefix == "" {
+		format = strings.ReplaceAll(format, "{{Prefix}}/", "")
+	}
+	link := replacer.Replace(format)
+	return link, nil
 }
 
-func (cli *IotHubClient) GenerateRtmpLink(secure bool, prefix string, channel int, imei string) (string, error) {
-	return utils.GenerateRtmpLink(secure, cli.endPointURL.String(), prefix, channel, imei)
+// GenerateHttpFLVHistoryLink generates flv history video link
+// Example: http://120.78.224.93:8881/3/868120303960873.history.flv
+func GenerateHttpFLVHistoryLink(secure bool, endpoint string, channel int, imei string) (string, error) {
+	scheme := "http"
+	if secure {
+		scheme = "https"
+	}
+	// Construct a secured endpoint URL.
+	endpointURLStr := scheme + "://" + endpoint
+	endpointURL, err := url.Parse(endpointURLStr)
+	if err != nil {
+		return "", err
+	}
+	// Validate incoming endpoint URL.
+	if !regexp.MustCompile(validEndpointRegex).MatchString(endpointURL.Host) || endpointURL.Path != "" {
+		return "", fmt.Errorf("%s is an invalid endpoint", endpointURL.String())
+	}
+	replacer := strings.NewReplacer(
+		"{{FlvAddress}}", endpointURL.String(),
+		"{{channel}}", fmt.Sprintf("%d", channel),
+		"{{IMEI}}", imei,
+	)
+	link := replacer.Replace(HttpFLVHistoryLinkFormat)
+	return link, nil
+}
+
+// GenerateHttpFLVReplayLink generates flv history video link for replay list
+// Example: http://example.com:8881/live/868120303960873.flv
+func GenerateHttpFLVReplayLink(secure bool, endpoint string, prefix string, imei string) (string, error) {
+	scheme := "http"
+	if secure {
+		scheme = "https"
+	}
+	// Construct a secured endpoint URL.
+	endpointURLStr := scheme + "://" + endpoint
+	endpointURL, err := url.Parse(endpointURLStr)
+	if err != nil {
+		return "", err
+	}
+	// Validate incoming endpoint URL.
+	if !regexp.MustCompile(validEndpointRegex).MatchString(endpointURL.Host) || endpointURL.Path != "" {
+		return "", fmt.Errorf("%s is an invalid endpoint", endpointURL.String())
+	}
+	replacer := strings.NewReplacer(
+		"{{FlvAddress}}", endpointURL.String(),
+		"{{Prefix}}", prefix,
+		"{{IMEI}}", imei,
+	)
+	format := HttpFLVReplayLinkFormat
+	if prefix == "" {
+		format = strings.ReplaceAll(format, "{{Prefix}}/", "")
+	}
+	link := replacer.Replace(format)
+	return link, nil
+}
+
+// GenerateRtmpLiveLink generates rtmp video link
+// Example: rtmp://example.com:1936/live/0/86271111111111
+func GenerateRtmpLiveLink(secure bool, endpoint, prefix string, channel int, imei string) (string, error) {
+	scheme := "rtmp"
+	if secure {
+		scheme = "rtmps"
+	}
+	// Construct a secured endpoint URL.
+	endpointURLStr := scheme + "://" + endpoint
+	endpointURL, err := url.Parse(endpointURLStr)
+	if err != nil {
+		return "", err
+	}
+	// Validate incoming endpoint URL.
+	if !regexp.MustCompile(validEndpointRegex).MatchString(endpointURL.Host) || endpointURL.Path != "" {
+		return "", fmt.Errorf("%s is an invalid endpoint", endpointURL.String())
+	}
+	replacer := strings.NewReplacer(
+		"{{RtmpAddress}}", endpointURL.String(),
+		"{{Prefix}}", prefix,
+		"{{channel}}", fmt.Sprintf("%d", channel),
+		"{{IMEI}}", imei,
+	)
+	format := RtmpLiveLinkFormat
+	if prefix == "" {
+		format = strings.ReplaceAll(format, "{{Prefix}}/", "")
+	}
+	link := replacer.Replace(format)
+	return link, nil
+}
+
+func (cli *IotHubClient) GenerateHttpFlvLiveLink(secure bool, prefix string, channel int, imei string) (string, error) {
+	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.HttpFlvMediaServerPort)
+	return GenerateHttpFLVLiveLink(secure, flvEndpoint, prefix, channel, imei)
+}
+
+func (cli *IotHubClient) GenerateRtmpLiveLink(secure bool, prefix string, channel int, imei string) (string, error) {
+	rtmpEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.RtmpMediaServerPort)
+	return GenerateRtmpLiveLink(secure, rtmpEndpoint, prefix, channel, imei)
+}
+
+func (cli *IotHubClient) GenerateHttpFLVHistoryLink(secure bool, channel int, imei string) (string, error) {
+	rtmpEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.HttpFlvMediaServerPort)
+	return GenerateHttpFLVHistoryLink(secure, rtmpEndpoint, channel, imei)
+}
+
+func (cli *IotHubClient) GenerateHttpFLVReplayLink(secure bool, prefix string, imei string) (string, error) {
+	rtmpEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.HttpFlvMediaServerPort)
+	return GenerateHttpFLVReplayLink(secure, rtmpEndpoint, prefix, imei)
 }
 
 func (cli *IotHubClient) GenerateVideoLinks(secure bool, prefix string, channel int, imei string) (*VideoLinks, error) {
-	rtmpLink, err := utils.GenerateRtmpLink(secure, cli.endPointURL.String(), prefix, channel, imei)
+	rtmpLiveLink, err := cli.GenerateRtmpLiveLink(secure, prefix, channel, imei)
 	if err != nil {
 		return nil, err
 	}
-	flvLink, err := utils.GenerateHttpFLVLink(secure, cli.endPointURL.String(), prefix, channel, imei)
+	flvLiveLink, err := cli.GenerateHttpFlvLiveLink(secure, prefix, channel, imei)
+	if err != nil {
+		return nil, err
+	}
+	flvReplayLink, err := cli.GenerateHttpFLVReplayLink(secure, prefix, imei)
+	if err != nil {
+		return nil, err
+	}
+	flvHistoryLink, err := cli.GenerateHttpFLVHistoryLink(secure, channel, imei)
 	if err != nil {
 		return nil, err
 	}
 	return &VideoLinks{
-		RtmpLink: rtmpLink,
-		FlvLink:  flvLink,
+		RtmpLiveLink:   rtmpLiveLink,
+		FlvLiveLink:    flvLiveLink,
+		FLVReplayLink:  flvReplayLink,
+		FLVHistoryLink: flvHistoryLink,
 	}, nil
 }
 

@@ -35,8 +35,10 @@ type JimiIotHub interface {
 	HistoryPlaybackControlRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *PlaybackControlCmdContent) (*InstructRequest, error)
 
 	GenerateDeviceConfigLinks(rtmpPrefix string) *DeviceConfigLinks
-	GenerateRtmpLink(secure bool, prefix string, channel int, imei string) (string, error)
-	GenerateHttpFlvLink(secure bool, prefix string, channel int, imei string) (string, error)
+	GenerateRtmpLiveLink(secure bool, prefix string, channel int, imei string) (string, error)
+	GenerateHttpFlvLiveLink(secure bool, prefix string, channel int, imei string) (string, error)
+	GenerateHttpFLVReplayLink(secure bool, prefix string, imei string) (string, error)
+	GenerateHttpFLVHistoryLink(secure bool, channel int, imei string) (string, error)
 	GenerateVideoLinks(secure bool, prefix string, channel int, imei string) (*VideoLinks, error)
 }
 
