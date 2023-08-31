@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/openfms/jimi-iothub/utils"
 )
 
 type PlaybackControl byte
@@ -45,7 +46,7 @@ func (cli *IotHubClient) HistoryPlaybackControlRequest(ctx context.Context, imei
 		return nil, ErrUnsupportedRequest
 	}
 	if len(cmdContent.InstructionID) == 0 {
-		cmdContent.InstructionID = GenerateUniqueInstructionID()
+		cmdContent.InstructionID = utils.GenerateUniqueInstructionID()
 	}
 	if cmdContent.Channel == 0 {
 		cmdContent.Channel = 1

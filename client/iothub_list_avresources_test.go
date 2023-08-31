@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"github.com/openfms/jimi-iothub/utils"
 	"gotest.tools/v3/assert"
 	"os"
 	"testing"
@@ -20,7 +21,7 @@ func TestIotHubClient_ListAVResourcesRequest(t *testing.T) {
 		ResourceType:  ResourceAudioAndVideo,
 		CodeType:      CodeTypeAllStream,
 		StorageType:   StorageTypeAllStorage,
-		InstructionID: GenerateUniqueInstructionID(),
+		InstructionID: utils.GenerateUniqueInstructionID(),
 		BeginTime:     "230826113555",
 		EndTime:       "230826113854",
 	})

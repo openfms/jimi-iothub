@@ -2,9 +2,6 @@ package client
 
 import (
 	"errors"
-	"fmt"
-	"math/rand"
-	"time"
 )
 
 type ProNumber int
@@ -93,15 +90,6 @@ type ResponseData struct {
 	ServerFlagId    string       `json:"_serverFlagId"`
 	GateId          string       `json:"_gateId"`
 	RouteServerTime string       `json:"_route_server_time"`
-}
-
-func GenerateUniqueInstructionID() string {
-	// Generate a random number between 0 and 999999999
-
-	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-	randomNumber := rnd.Intn(1000000000)
-
-	return fmt.Sprintf("%09d", randomNumber)
 }
 
 type DeviceModel uint8

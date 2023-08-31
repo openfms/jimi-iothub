@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"github.com/openfms/jimi-iothub/utils"
 	"gotest.tools/v3/assert"
 	"os"
 	"testing"
@@ -15,7 +16,7 @@ func TestIotHubClient_HistoryVideoPlaybackRequest(t *testing.T) {
 	iothubcli, err := NewIotHubClient(env, nil)
 	assert.NilError(t, err)
 	req, err := iothubcli.HistoryVideoPlaybackRequest(ctx, deviceImei, DeviceModelJC450, &PlaybackCmdContent{
-		InstructionID: GenerateUniqueInstructionID(),
+		InstructionID: utils.GenerateUniqueInstructionID(),
 		TCPPort:       "10003",
 		UDPPort:       "0",
 		Channel:       "1",

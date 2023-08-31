@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/openfms/jimi-iothub/utils"
 )
 
 type AVResourceListCmdContent struct {
@@ -49,7 +50,7 @@ func (cli *IotHubClient) ListAVResourcesRequest(ctx context.Context, imei string
 		return nil, ErrUnsupportedRequest
 	}
 	if len(cmdContent.InstructionID) == 0 {
-		cmdContent.InstructionID = GenerateUniqueInstructionID()
+		cmdContent.InstructionID = utils.GenerateUniqueInstructionID()
 	}
 	if len(cmdContent.BeginTime) == 0 {
 		return nil, fmt.Errorf("field begin_time is empty")
