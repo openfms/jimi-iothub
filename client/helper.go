@@ -104,6 +104,26 @@ const (
 	DeviceModelJC450  = 7
 )
 
+var DeviceModelNames = map[DeviceModel]string{
+	DeviceModelJC120:  "JC120",
+	DeviceModelJC170:  "JC170",
+	DeviceModelJC200:  "JC200",
+	DeviceModelJC400:  "JC400",
+	DeviceModelJC400P: "JC400P",
+	DeviceModelJC400D: "JC400D",
+	DeviceModelJC450:  "JC450",
+}
+
+var DeviceModelValues = map[string]DeviceModel{
+	"JC120":  DeviceModelJC120,
+	"JC170":  DeviceModelJC170,
+	"JC200":  DeviceModelJC200,
+	"JC400":  DeviceModelJC400,
+	"JC400P": DeviceModelJC400P,
+	"JC400D": DeviceModelJC400D,
+	"JC450":  DeviceModelJC450,
+}
+
 var (
 	ErrUnsupportedRequest = errors.New("request not supported by device model")
 	ErrEmptyCmdContent    = errors.New("command content is empty")
