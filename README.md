@@ -4,7 +4,7 @@
     </a>
 </div>
 
-# jimi iothub cleint
+# jimi iothub client
 [![Documentation](https://img.shields.io/badge/Documentation-Read%20Now-blue.svg)](https://docs.jimicloud.com/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
