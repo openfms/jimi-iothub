@@ -83,6 +83,14 @@ const (
 	CameraTypeBoth   CameraType = "INOUT"
 )
 
+var CameraTypeChannel = map[uint8]CameraType{
+	0: CameraTypeFront,
+	1: CameraTypeInward,
+	2: CameraTypeBoth,
+}
+
+var _ = CameraTypeChannel
+
 // CapturePicture Capture the images from the device.
 // Example: Picture,in
 func CapturePicture(camera CameraType) string {
