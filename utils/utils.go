@@ -41,3 +41,14 @@ func GenerateUniqueInstructionID() string {
 
 	return fmt.Sprintf("%09d", randomNumber)
 }
+
+func FormatTime(t time.Time) string {
+	return fmt.Sprintf("%02d%02d%02d%02d%02d%02d",
+		t.Year()%100, t.Month(), t.Day(),
+		t.Hour(), t.Minute(), t.Second())
+}
+
+func FormatUnixTime(unixTime int64) string {
+	t := time.Unix(unixTime, 0)
+	return FormatTime(t)
+}
