@@ -17,7 +17,7 @@ type IotHubConfig struct {
 	InstructionServicePort string `env:"INSTRUCTION_SERVICE_PORT" envDefault:"10088"`
 	RedisAddress           string `env:"IOTHUB_REDIS_ADDRESS,notEmpty"`
 	RedisPassword          string `env:"IOTHUB_REDIS_PASSWORD"`
-	RedisDB                string `env:"IOTHUB_REDIS_DB" envDefault:"0"`
+	RedisDB                int    `env:"IOTHUB_REDIS_DB" envDefault:"0"`
 }
 
 func ReadIotHubEnvironments() (*IotHubConfig, error) {
