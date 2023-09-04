@@ -30,5 +30,5 @@ func TestIotHubClient_ListAVResourcesRequest(t *testing.T) {
 	assert.NilError(t, err)
 	t.Log(resp)
 	assert.Assert(t, resp.Code == 0)
-	assert.Assert(t, resp.Data.Code == Success)
+	assert.Assert(t, resp.Data.Code == ResponseCodeSuccess)
 }

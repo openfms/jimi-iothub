@@ -14,9 +14,13 @@ func TestIotHubClient_SendDeviceInstruction(t *testing.T) {
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
 	ctx := context.Background()
-	opts, err := redis.ParseURL(env.RedisURL)
+
 	assert.NilError(t, err)
-	cli := redis.NewClient(opts)
+	cli := redis.NewClient(&redis.Options{
+		Addr:     env.RedisAddress,
+		Password: env.RedisPassword,
+		DB:       env.RedisDB,
+	})
 	iothubcli, err := NewIotHubClient(env, cli)
 	assert.NilError(t, err)
 	req, err := iothubcli.DeviceInstructionRequest(ctx, deviceImei, commands.GenerateCommand(commands.STATUS))
@@ -24,5 +28,5 @@ func TestIotHubClient_SendDeviceInstruction(t *testing.T) {
 	resp, err := iothubcli.SendDeviceInstruction(ctx, req)
 	assert.NilError(t, err)
 	assert.Assert(t, resp.Code == 0)
-	assert.Assert(t, resp.Data.Code == Success)
+	assert.Assert(t, resp.Data.Code == ResponseCodeSuccess)
 }
