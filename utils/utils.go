@@ -5,6 +5,8 @@ import (
 	"math/rand"
 	"net/url"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -51,4 +53,27 @@ func FormatTime(t time.Time) string {
 func FormatUnixTime(unixTime int64) string {
 	t := time.Unix(unixTime, 0)
 	return FormatTime(t)
+}
+
+func AddOffsetToUnixTime(offset string, unixTime int64) (int64, error) {
+	parts := strings.Split(offset, ":")
+	if len(parts) != 2 {
+		return 0, fmt.Errorf("invalid offset format")
+	}
+
+	hours, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0, err
+	}
+
+	minutes, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return 0, err
+	}
+
+	// Calculate the duration in seconds
+	offsetDuration := time.Duration(hours)*time.Hour + time.Duration(minutes)*time.Minute
+	timestamp := time.Unix(unixTime, 0)
+
+	return timestamp.Add(offsetDuration).Unix(), nil
 }

@@ -5,6 +5,7 @@ import (
 	"gotest.tools/v3/assert"
 	"net/url"
 	"testing"
+	"time"
 )
 
 func TestGetEndpointURL(t *testing.T) {
@@ -57,4 +58,48 @@ func TestGetEndpointURL(t *testing.T) {
 func Test_generateUniqueInstructionID(t *testing.T) {
 	id := GenerateUniqueInstructionID()
 	t.Log(id)
+}
+
+func TestAddOffsetToUnixTime(t *testing.T) {
+	now := time.Now()
+	testCases := map[string]struct {
+		offsetStr string
+		unixTime  int64
+		expected  int64
+		errWant   error
+	}{
+		// Test cases with valid input
+		"PositiveOffset": {
+			offsetStr: "+02:00",
+			unixTime:  now.Unix(),
+			expected:  now.Add(time.Hour * 2).Unix(),
+			errWant:   nil,
+		},
+		"NegativeOffset": {
+			offsetStr: "-05:00",
+			unixTime:  now.Unix(),
+			expected:  now.Add(time.Hour * -5).Unix(),
+			errWant:   nil,
+		},
+		// Test cases with invalid input
+		"InvalidOffset": {
+			offsetStr: "invalid",
+			unixTime:  1596211200,
+			expected:  0,
+			errWant:   errors.New("invalid offset format"),
+		},
+	}
+
+	for name, test := range testCases {
+		t.Run(name, func(t *testing.T) {
+			result, err := AddOffsetToUnixTime(test.offsetStr, test.unixTime)
+
+			if test.errWant != nil {
+				assert.Equal(t, test.errWant.Error(), err.Error())
+			} else {
+				assert.NilError(t, err)
+				assert.Equal(t, result, test.expected)
+			}
+		})
+	}
 }
