@@ -10,7 +10,7 @@ type IotHubConfig struct {
 	JTGatewayPort           string `env:"JT_GATEWAY_PORT" envDefault:"21122"`
 	FileStoragePort         string `env:"FILE_STORAGE_PORT" envDefault:"23010"`
 	HttpFlvMediaServerPort  string `env:"FLV_HTTP_PORT" envDefault:"8881"`
-	HttpsFlvMediaServerPort string `env:"FLV_HTTPS_PORT" envDefault:"8090"`
+	HttpsFlvMediaServerPort string `env:"FLV_HTTPS_PORT" envDefault:"8890"`
 	RtmpMediaServerPort     string `env:"RTMP_PORT" envDefault:"1936"`
 	LiveVideoPort           string `env:"LIVE_VIDEO_PORT" envDefault:"10002"`
 	HistoryVideoPort        string `env:"HISTORY_VIDEO_PORT" envDefault:"10003"`
