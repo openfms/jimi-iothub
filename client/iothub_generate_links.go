@@ -140,7 +140,11 @@ func GenerateRtmpLiveLink(secure bool, endpoint, prefix string, channel int, ime
 }
 
 func (cli *IotHubClient) GenerateHttpFlvLiveLink(secure bool, prefix string, channel int, imei string) (string, error) {
-	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.HttpFlvMediaServerPort)
+	port := cli.config.HttpFlvMediaServerPort
+	if secure {
+		port = cli.config.HttpsFlvMediaServerPort
+	}
+	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), port)
 	return GenerateHttpFLVLiveLink(secure, flvEndpoint, prefix, channel, imei)
 }
 
@@ -150,13 +154,21 @@ func (cli *IotHubClient) GenerateRtmpLiveLink(secure bool, prefix string, channe
 }
 
 func (cli *IotHubClient) GenerateHttpFLVHistoryLink(secure bool, channel int, imei string) (string, error) {
-	rtmpEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.HttpFlvMediaServerPort)
-	return GenerateHttpFLVHistoryLink(secure, rtmpEndpoint, channel, imei)
+	port := cli.config.HttpFlvMediaServerPort
+	if secure {
+		port = cli.config.HttpsFlvMediaServerPort
+	}
+	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), port)
+	return GenerateHttpFLVHistoryLink(secure, flvEndpoint, channel, imei)
 }
 
 func (cli *IotHubClient) GenerateHttpFLVReplayLink(secure bool, prefix string, imei string) (string, error) {
-	rtmpEndpoint := net.JoinHostPort(cli.GetEndpointHost(), cli.config.HttpFlvMediaServerPort)
-	return GenerateHttpFLVReplayLink(secure, rtmpEndpoint, prefix, imei)
+	port := cli.config.HttpFlvMediaServerPort
+	if secure {
+		port = cli.config.HttpsFlvMediaServerPort
+	}
+	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), port)
+	return GenerateHttpFLVReplayLink(secure, flvEndpoint, prefix, imei)
 }
 
 func (cli *IotHubClient) GenerateVideoLinks(secure bool, prefix string, channel int, imei string) (*VideoLinks, error) {
