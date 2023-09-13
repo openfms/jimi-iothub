@@ -5,6 +5,8 @@ import (
 	"regexp"
 )
 
+const DefaultAdminPassword = "666666"
+
 // ChangePassword changes the password of device
 // Example: PASSWORD,666666,123456
 func ChangePassword(oldPassword, newPassword string) string {

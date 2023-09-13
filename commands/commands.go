@@ -4,6 +4,7 @@ import "strings"
 
 type DeviceCommands interface {
 	GenerateCommand(command DeviceCommand, params ...string) string
+	ParseParam(param string) *DeviceParams
 
 	CoreKitSwitch(mode CoreKitMode) string
 	ModifyHttpUploadServer(url string) string
