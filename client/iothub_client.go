@@ -18,6 +18,7 @@ type IotHubClient struct {
 	wg          *sync.WaitGroup
 }
 
+//go:generate mockgen -source=$GOFILE -destination=../mock/iothub_cleint.go -package=$GOPACKAG
 type JimiIotHub interface {
 	Stop()
 	EndpointURL() *url.URL
