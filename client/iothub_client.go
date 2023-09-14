@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"errors"
 	"github.com/go-resty/resty/v2"
 	"github.com/openfms/jimi-iothub/utils"
 	"github.com/redis/go-redis/v9"
@@ -44,10 +45,15 @@ type JimiIotHub interface {
 }
 
 var (
-	_ JimiIotHub = &IotHubClient{}
+	_            JimiIotHub = &IotHubClient{}
+	ErrNilConfig            = errors.New("config should not be nil")
 )
 
-func NewIotHubClient(config *IotHubConfig, redisCli *redis.Client) (*IotHubClient, error) {
+func NewIotHubClient(config *IotHubConfig) (*IotHubClient, error) {
+	if config == nil {
+		return nil, ErrNilConfig
+	}
+
 	endPointURL, err := utils.GetEndpointURL(config.EndPoint)
 	if err != nil {
 		return nil, err
@@ -60,13 +66,24 @@ func NewIotHubClient(config *IotHubConfig, redisCli *redis.Client) (*IotHubClien
 	if len(config.Proxy) > 0 {
 		client.SetProxy(config.Proxy)
 	}
-	return &IotHubClient{
+	iotHub := &IotHubClient{
 		client:      client,
 		wg:          &sync.WaitGroup{},
 		endPointURL: endPointURL,
 		config:      config,
-		redis:       redisCli,
-	}, nil
+	}
+	if len(config.RedisAddress) > 0 {
+		iotHubRedis := redis.NewClient(&redis.Options{
+			Addr:     config.RedisAddress,
+			Password: config.RedisPassword,
+			DB:       config.RedisDB,
+		})
+		if _, e := iotHubRedis.Ping(context.Background()).Result(); e != nil {
+			return nil, e
+		}
+		iotHub.redis = iotHubRedis
+	}
+	return iotHub, nil
 }
 
 func (cli *IotHubClient) Stop() {
