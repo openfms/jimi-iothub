@@ -51,7 +51,7 @@ func TestGenerateVideoLiveLink(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			result, err := GenerateHttpFLVLiveLink(test.secure, test.endpoint, test.prefix, test.channel, test.imei)
+			result, err := GenerateFLVLiveLink(test.secure, test.endpoint, test.prefix, test.channel, test.imei)
 			assert.NilError(t, err)
 			assert.Equal(t, test.expected, result, "Unexpected result")
 		})
@@ -138,7 +138,7 @@ func TestGenerateHttpFLVHistoryLink(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			result, err := GenerateHttpFLVHistoryLink(test.secure, test.endpoint, test.channel, test.imei)
+			result, err := GenerateFLVHistoryLink(test.secure, test.endpoint, test.channel, test.imei)
 			assert.NilError(t, err)
 			assert.Equal(t, test.expected, result, "Unexpected result")
 		})
@@ -186,7 +186,7 @@ func TestGenerateHttpFLVReplayLink(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			result, err := GenerateHttpFLVReplayLink(test.secure, test.endpoint, test.prefix, test.imei)
+			result, err := GenerateFLVReplayLink(test.secure, test.endpoint, test.prefix, test.imei)
 			assert.NilError(t, err)
 			assert.Equal(t, test.expected, result, "Unexpected result")
 		})

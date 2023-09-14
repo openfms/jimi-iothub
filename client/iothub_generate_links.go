@@ -21,9 +21,9 @@ type VideoLinks struct {
 	FLVHistoryLink, FLVReplayLink string
 }
 
-// GenerateHttpFLVLiveLink generates flv live video link
+// GenerateFLVLiveLink generates flv live video link
 // Example: http://example.com:8881/live/0/86271111111111.flv
-func GenerateHttpFLVLiveLink(secure bool, endpoint, prefix string, channel int, imei string) (string, error) {
+func GenerateFLVLiveLink(secure bool, endpoint, prefix string, channel int, imei string) (string, error) {
 	scheme := "http"
 	if secure {
 		scheme = "https"
@@ -52,9 +52,9 @@ func GenerateHttpFLVLiveLink(secure bool, endpoint, prefix string, channel int, 
 	return link, nil
 }
 
-// GenerateHttpFLVHistoryLink generates flv history video link
+// GenerateFLVHistoryLink generates flv history video link
 // Example: http://120.78.224.93:8881/3/868120303960873.history.flv
-func GenerateHttpFLVHistoryLink(secure bool, endpoint string, channel int, imei string) (string, error) {
+func GenerateFLVHistoryLink(secure bool, endpoint string, channel int, imei string) (string, error) {
 	scheme := "http"
 	if secure {
 		scheme = "https"
@@ -78,9 +78,9 @@ func GenerateHttpFLVHistoryLink(secure bool, endpoint string, channel int, imei 
 	return link, nil
 }
 
-// GenerateHttpFLVReplayLink generates flv history video link for replay list
+// GenerateFLVReplayLink generates flv history video link for replay list
 // Example: http://example.com:8881/live/868120303960873.flv
-func GenerateHttpFLVReplayLink(secure bool, endpoint string, prefix string, imei string) (string, error) {
+func GenerateFLVReplayLink(secure bool, endpoint string, prefix string, imei string) (string, error) {
 	scheme := "http"
 	if secure {
 		scheme = "https"
@@ -139,13 +139,13 @@ func GenerateRtmpLiveLink(secure bool, endpoint, prefix string, channel int, ime
 	return link, nil
 }
 
-func (cli *IotHubClient) GenerateHttpFlvLiveLink(secure bool, prefix string, channel int, imei string) (string, error) {
+func (cli *IotHubClient) GenerateFlvLiveLink(secure bool, prefix string, channel int, imei string) (string, error) {
 	port := cli.config.HttpFlvMediaServerPort
 	if secure {
 		port = cli.config.HttpsFlvMediaServerPort
 	}
 	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), port)
-	return GenerateHttpFLVLiveLink(secure, flvEndpoint, prefix, channel, imei)
+	return GenerateFLVLiveLink(secure, flvEndpoint, prefix, channel, imei)
 }
 
 func (cli *IotHubClient) GenerateRtmpLiveLink(secure bool, prefix string, channel int, imei string) (string, error) {
@@ -153,22 +153,22 @@ func (cli *IotHubClient) GenerateRtmpLiveLink(secure bool, prefix string, channe
 	return GenerateRtmpLiveLink(secure, rtmpEndpoint, prefix, channel, imei)
 }
 
-func (cli *IotHubClient) GenerateHttpFLVHistoryLink(secure bool, channel int, imei string) (string, error) {
+func (cli *IotHubClient) GenerateFLVHistoryLink(secure bool, channel int, imei string) (string, error) {
 	port := cli.config.HttpFlvMediaServerPort
 	if secure {
 		port = cli.config.HttpsFlvMediaServerPort
 	}
 	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), port)
-	return GenerateHttpFLVHistoryLink(secure, flvEndpoint, channel, imei)
+	return GenerateFLVHistoryLink(secure, flvEndpoint, channel, imei)
 }
 
-func (cli *IotHubClient) GenerateHttpFLVReplayLink(secure bool, prefix string, imei string) (string, error) {
+func (cli *IotHubClient) GenerateFLVReplayLink(secure bool, prefix string, imei string) (string, error) {
 	port := cli.config.HttpFlvMediaServerPort
 	if secure {
 		port = cli.config.HttpsFlvMediaServerPort
 	}
 	flvEndpoint := net.JoinHostPort(cli.GetEndpointHost(), port)
-	return GenerateHttpFLVReplayLink(secure, flvEndpoint, prefix, imei)
+	return GenerateFLVReplayLink(secure, flvEndpoint, prefix, imei)
 }
 
 func (cli *IotHubClient) GenerateVideoLinks(secure bool, prefix string, channel int, imei string) (*VideoLinks, error) {
@@ -176,15 +176,15 @@ func (cli *IotHubClient) GenerateVideoLinks(secure bool, prefix string, channel 
 	if err != nil {
 		return nil, err
 	}
-	flvLiveLink, err := cli.GenerateHttpFlvLiveLink(secure, prefix, channel, imei)
+	flvLiveLink, err := cli.GenerateFlvLiveLink(secure, prefix, channel, imei)
 	if err != nil {
 		return nil, err
 	}
-	flvReplayLink, err := cli.GenerateHttpFLVReplayLink(secure, prefix, imei)
+	flvReplayLink, err := cli.GenerateFLVReplayLink(secure, prefix, imei)
 	if err != nil {
 		return nil, err
 	}
-	flvHistoryLink, err := cli.GenerateHttpFLVHistoryLink(secure, channel, imei)
+	flvHistoryLink, err := cli.GenerateFLVHistoryLink(secure, channel, imei)
 	if err != nil {
 		return nil, err
 	}
