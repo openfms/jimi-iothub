@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"github.com/openfms/jimi-iothub/commands"
-	"github.com/redis/go-redis/v9"
 	"gotest.tools/v3/assert"
 	"os"
 	"testing"
@@ -16,12 +15,7 @@ func TestIotHubClient_SendDeviceInstruction(t *testing.T) {
 	ctx := context.Background()
 
 	assert.NilError(t, err)
-	cli := redis.NewClient(&redis.Options{
-		Addr:     env.RedisAddress,
-		Password: env.RedisPassword,
-		DB:       env.RedisDB,
-	})
-	iothubcli, err := NewIotHubClient(env, cli)
+	iothubcli, err := NewIotHubClient(env)
 	assert.NilError(t, err)
 	req, err := iothubcli.DeviceInstructionRequest(ctx, deviceImei, commands.GenerateCommand(commands.STATUS))
 	assert.NilError(t, err)

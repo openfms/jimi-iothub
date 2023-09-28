@@ -12,7 +12,7 @@ func TestIotHubClient_RealTimeAVControlRequest(t *testing.T) {
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
 	ctx := context.Background()
-	iothubcli, err := NewIotHubClient(env, nil)
+	iothubcli, err := NewIotHubClient(env)
 	assert.NilError(t, err)
 	req, err := iothubcli.RealTimeAVControlRequest(ctx, deviceImei, DeviceModelJC450, &RealTimeControlCmdContent{
 		DataType:       TurnOffBothAudioAndVideo,
