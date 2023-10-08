@@ -13,7 +13,7 @@ func TestIotHubClient_ListAVResourcesRequest(t *testing.T) {
 	assert.NilError(t, err)
 	deviceImei := os.Getenv("IOTHUB_DEVICE_IMEI")
 	ctx := context.Background()
-	iotHubCli, err := NewIotHubClient(env, nil)
+	iotHubCli, err := NewIotHubClient(env)
 	assert.NilError(t, err)
 	req, err := iotHubCli.ListAVResourcesRequest(ctx, deviceImei, DeviceModelJC450, &AVResourceListCmdContent{
 		Channel:       0,
