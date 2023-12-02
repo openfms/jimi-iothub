@@ -52,7 +52,7 @@ func (cli *IotHubClient) RealTimeAVRequest(ctx context.Context, imei string, dev
 		cmdContent.VideoTCPPort = cli.config.LiveVideoPort
 	}
 	if len(cmdContent.VideoIP) == 0 {
-		cmdContent.VideoIP = cli.GetEndpointHost()
+		cmdContent.VideoIP = cli.config.VideoIP
 	}
 	jsonData, _ := json.Marshal(cmdContent)
 	req, err := cli.DeviceInstructionRequest(ctx, imei, string(jsonData))

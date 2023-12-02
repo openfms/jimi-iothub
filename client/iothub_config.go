@@ -15,10 +15,14 @@ type IotHubConfig struct {
 	LiveVideoPort           string `env:"LIVE_VIDEO_PORT" envDefault:"10002"`
 	HistoryVideoPort        string `env:"HISTORY_VIDEO_PORT" envDefault:"10003"`
 	APIPort                 string `env:"API_PORT" envDefault:"9080"`
+	VideoIP                 string `env:"IOTHUB_VIDEO_IP"`
 	InstructionServicePort  string `env:"INSTRUCTION_SERVICE_PORT" envDefault:"10088"`
 	RedisAddress            string `env:"IOTHUB_REDIS_ADDRESS"`
 	RedisPassword           string `env:"IOTHUB_REDIS_PASSWORD"`
 	RedisDB                 int    `env:"IOTHUB_REDIS_DB" envDefault:"0"`
+	Timeout                 int    `env:"JIMI_REQUEST_TIMEOUT" envDefault:"30"`
+	OfflineFlag             bool   `env:"JIMI_OFFLINE_FLAG" envDefault:"false"`
+	Sync                    bool   `env:"JIMI_REQUEST_TIMEOUT" envDefault:"true"`
 }
 
 func ReadIotHubEnvironments() (*IotHubConfig, error) {
