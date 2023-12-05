@@ -3,8 +3,9 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 	"sync"
+
+	"github.com/google/go-querystring/query"
 )
 
 var (
@@ -68,9 +69,9 @@ func (cli *IotHubClient) DeviceInstructionRequest(ctx context.Context, imei stri
 		Platform:     RequestPlatformWeb,
 		CmdType:      NormallnsCommandType,
 		Token:        cli.config.Token,
-		OfflineFlag:  true,
-		Timeout:      30,
-		Sync:         true,
+		OfflineFlag:  cli.config.OfflineFlag,
+		Timeout:      cli.config.Timeout,
+		Sync:         cli.config.Sync,
 		RequestID:    reqID,
 		ServerFlagID: flagID,
 		CmdContent:   command,

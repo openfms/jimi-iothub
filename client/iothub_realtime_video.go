@@ -5,22 +5,22 @@ import (
 	"encoding/json"
 )
 
-type RealTimeAVDataType string
+type RealTimeAVDataType uint8
 
 const (
-	AudioVideoDataType              RealTimeAVDataType = "0"
-	VideoDataType                   RealTimeAVDataType = "1"
-	TwoWayIntercomDataType          RealTimeAVDataType = "2"
-	MonitorDataType                 RealTimeAVDataType = "3"
-	CenterBroadcastDataType         RealTimeAVDataType = "4"
-	TransparentTransmissionDataType RealTimeAVDataType = "5"
+	AudioVideoDataType              RealTimeAVDataType = 0
+	VideoDataType                   RealTimeAVDataType = 1
+	TwoWayIntercomDataType          RealTimeAVDataType = 2
+	MonitorDataType                 RealTimeAVDataType = 3
+	CenterBroadcastDataType         RealTimeAVDataType = 4
+	TransparentTransmissionDataType RealTimeAVDataType = 5
 )
 
-type RealTimeCodeStreamType string
+type RealTimeCodeStreamType uint8
 
 const (
-	MainStream RealTimeCodeStreamType = "0"
-	SubStream  RealTimeCodeStreamType = "1"
+	MainStream RealTimeCodeStreamType = 0
+	SubStream  RealTimeCodeStreamType = 1
 )
 
 type RealTimeCmdContent struct {
@@ -29,7 +29,7 @@ type RealTimeCmdContent struct {
 	Channel        string                 `json:"channel"`
 	VideoIP        string                 `json:"videoIP"`
 	VideoTCPPort   string                 `json:"videoTCPPort"`
-	VideoUDPPort   string                 `json:"videoUDPPort"`
+	VideoUDPPort   int                    `json:"videoUDPPort"`
 }
 
 func (cli *IotHubClient) RealTimeAVRequest(ctx context.Context, imei string, deviceModel DeviceModel, cmdContent *RealTimeCmdContent) (*InstructRequest, error) {
@@ -39,10 +39,10 @@ func (cli *IotHubClient) RealTimeAVRequest(ctx context.Context, imei string, dev
 	if deviceModel < DeviceModelJC450 {
 		return nil, ErrUnsupportedRequest
 	}
-	if len(cmdContent.DataType) == 0 {
+	if cmdContent.DataType == 0 {
 		cmdContent.DataType = AudioVideoDataType
 	}
-	if len(cmdContent.CodeStreamType) == 0 {
+	if cmdContent.CodeStreamType == 0 {
 		cmdContent.CodeStreamType = MainStream
 	}
 	if len(cmdContent.Channel) == 0 {
@@ -52,7 +52,7 @@ func (cli *IotHubClient) RealTimeAVRequest(ctx context.Context, imei string, dev
 		cmdContent.VideoTCPPort = cli.config.LiveVideoPort
 	}
 	if len(cmdContent.VideoIP) == 0 {
-		cmdContent.VideoIP = cli.GetEndpointHost()
+		cmdContent.VideoIP = cli.config.VideoIP
 	}
 	jsonData, _ := json.Marshal(cmdContent)
 	req, err := cli.DeviceInstructionRequest(ctx, imei, string(jsonData))
